@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import './token.dart';
+import './stats.dart';
 
 class SecondRoute extends StatelessWidget {
+  final String token;
+
+  SecondRoute({this.token});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -13,8 +17,12 @@ class SecondRoute extends StatelessWidget {
           onPressed: () {
             // Navigate back to first route when tapped.
             Navigator.pop(context);
+
+            fetch_stats(token).then((result) {
+              print(result.score);
+            });
           },
-          child: Text('Go back!'),
+          child: Text(token),
         ),
       ),
     );
@@ -84,18 +92,16 @@ class _LoginPageState extends State<LoginPage> {
                     password = passwordConttoller.text;
                     authenticate(username, password).then((result) {
                       token = result.token;
+                      print(token);
                       if (token == "invalid") {
                         invalid = true;
                       } else if (token != null) {
-                        print("loged in");
                         invalid = false;
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => SecondRoute()),
+                              builder: (context) => SecondRoute(token: token)),
                         );
-                      } else {
-                        print("something went wrong");
                       }
                     });
                   });
